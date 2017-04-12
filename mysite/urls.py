@@ -20,5 +20,6 @@ from votes.views import startpage
 
 urlpatterns = [
 	#url(r'^$', startpage),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'', include('votes.urls')),
 ]

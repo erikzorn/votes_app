@@ -1,0 +1,37 @@
+body {
+    background-color: #000;
+}
+.img-responsive {
+	 margin: 0 auto;
+}
+.table-bordered {
+	margin: 0 auto;
+}
+
+table, th, tr {
+    border: 1px solid black;
+}
+#bio {
+	padding:20px 100px 20px 100px;
+	margin: 0 auto;
+	text-align:left;
+}
+#contact {
+	padding:20px 100px 20px 100px;
+	margin: 0 auto;
+	
+}
+table.center {
+    margin-left:auto; 
+    margin-right:auto;
+    color: white;
+  }
+	
+
+#content {
+	padding:75px 100px 40px 100px;	<!--top, right, bottom, left -->
+}
+p {
+	color:white;
+	padding: 0;
+}

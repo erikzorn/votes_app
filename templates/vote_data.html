@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title>Erik Zorn Code Challenge</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+</head>
+<body>
+<div class="container" style="padding:15px 30px 20px 30px">
+	<h1>Welcome!</h1>
+	<p><b>Enter a Zipcode to retrieve recent bills voted on by your district's Congress Representative</b></p>
+	<form method='POST' action='.' class="form-horizontal">	{% csrf_token %}
+		<!--<input name='zipcode' type='text' placeholder='enter zipcode' />-->
+		{{ form.as_p }}
+		<input type='submit' value='submit'/>
+	</form>
+
+	<h2> Your Congress Representative is: {{person}}</h2>
+
+	<table class="table" align="center">
+
+		<tr>
+			<th>Bills Voted On</th>
+			<th>Voted</th>
+		</tr>
+
+		{% for item in votes %}
+			<tr>
+				<td>{{ item.0 }}</td>
+				<td>{{ item.1 }}</td>
+			</tr>
+		{% endfor %}
+
+	</table>
+</div>
+</body>
+</html>

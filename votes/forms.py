@@ -6,15 +6,12 @@ from django import forms
 #	zip_validator = 
 
 class SubmitZipForm(forms.Form):
-	zip = forms.IntegerField(label="Submit Zip")
+	zip = forms.IntegerField(label="", widget=forms.TextInput({ "placeholder": "enter zipcode here" }))
 
 	def clean(self):	# entire form
 		cleaned_data = super(SubmitZipForm, self).clean()
-		#print(cleaned_data)
 		zip = cleaned_data['zip']
-		#print zip
 
 	def clean_zip(self):	# individual field
 		zip = self.cleaned_data['zip']
-		#print(zip)
 		return zip

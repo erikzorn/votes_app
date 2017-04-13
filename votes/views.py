@@ -6,7 +6,9 @@ from django.views import View
 from .forms import SubmitZipForm
 import requests
 
-
+headers = {
+    	'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
+    }
 
 
 # Create your views here.
@@ -31,12 +33,10 @@ def get_district_number(zipcode):
 		#print js
 		state_name = js['results'][0]['state']
 		district_number = js['results'][0]['district']
-		return {'state_name':state_name, 'district_number':district_number}
+		#return {'state_name':state_name, 'district_number':district_number}
+		return state_name, district_number
 
 def get_congressperson(state, district):
-	headers = {
-    	'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
-    }
 	resp = requests.get('https://api.propublica.org/congress/v1/members/house/{}/{}/current.json'.format(state,district), headers=headers)
 	if resp.status_code != 200:
 			print 'Could not get congressperson, status code: ' + str(resp.status_code)
@@ -45,75 +45,73 @@ def get_congressperson(state, district):
 	return js['results'][0]['name'], js['results'][0]['id']
 
 def get_recent_votes(ID):
-	headers = {
-    	'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
-    	
-    }
+
    	resp = requests.get('https://api.propublica.org/congress/v1/members/{}/votes.json'.format(ID), headers=headers)
 
    	js = resp.json()
-   	#print js
-   	votes = []
-   	for i in range(0,9):
-   		votes.append(js['results'][0]['votes'][i]['position'])
 
-   	print votes
-	return votes
+   	votes_title = []
+   	votes_position = []
+   	votes = []
+   	count = 0	# keeps track of when 6 unique bills have been collected
+   	i = 0		# used for iteration through query data
+
+   	#add last 6 question and vote position so lists.
+   	while (count < 6):
+   		if bool(js['results'][0]['votes'][i]['bill']):		# if bill{} is not empty
+
+   			title = js['results'][0]['votes'][i]['bill']['title']	# title of specific bill
+   			position = js['results'][0]['votes'][i]['position']		# position (yes/no)
+
+   			if(title in votes_title):			# if this bill is already in the list then remove instance and corresponding position
+   				votes_position.pop(votes_title.index(title))
+   				votes_title.remove(title)
+
+   			else:		# if bill was not a duplicate then increment counter to know that there is now one more bill in the list
+   				count = count + 1
+
+   			#add new title and position to lists
+   			votes_title.append(title)
+   			votes_position.append(position)
+
+   		i = i + 1
+
+   	# put data in tuples to return
+   	for i in range(len(votes_title)):
+		votes.append([votes_title[i], votes_position[i]])
+
+	return votes #, votes_title, votes_position 
 
 
 
 class HomeView(View):
 	def get(self, request, *args, **kwargs):
-		the_form = SubmitZipForm()
+		form = SubmitZipForm()
 		context = {
-			'title': 'Submit Zip',
-			'form': the_form,
+			'title': 'Submit Zipcode',
+			'form': form,
 			'name': 'erikzorn'	
 		}
-		return render(request, 'startpage.html', context)
-
-	
+		#print form
+		return render(request, 'vote_data.html', context)
 
 	def post(self, request, *args, **kwargs):
-		#print(request.POST)
-		#print(request.POST.get('zipcode'))
 		form = SubmitZipForm(request.POST)
 		if form.is_valid():
 			print(form.cleaned_data)
-		code = get_district_number(form.cleaned_data['zip'])
-		state = code['state_name']
-		district = code['district_number']
+
+		state, district = get_district_number(form.cleaned_data['zip'])
 		congressperson, ID = get_congressperson(state, district)
-		position = get_recent_votes(ID)
-		print "State: " + str(state) 
-		print "District: " + str(district)
-		print congressperson
-		print ID
-		print position
-		
-		#print(get_district_number(21811))
-		#print(get_district_number(form.cleaned_data['zip']))
-		#resp = requests.get('https://congress.api.sunlightfoundation.com/districts/locate?zip=21811')
-		#js = resp.json()
-		#print(js)
+		votes = get_recent_votes(ID) 
 
 		context = {
-			'title': 'Submit Zip',
+			'title': 'Submit Zipcode',
 			'form': form,
-			'name': 'erikzorn'
+			'name': 'Erik Zorn',
+			'person': congressperson,
+			'votes':votes,
+		
 		}
-		return render(request,'startpage.html',context)
+		return render(request,'vote_data.html',context)
 
 	
-
-#def startpage(request):
-#	return render(request,'startpage.html',{})
-
-
-
-#def get(self, request, *args, **kwargs):
-	#return render(request,'startpage.html', {})
-
-#def post(self, request, *args, **kwargs):
-	#print(request.POST)
-	#return render(request,'startpage.html', {})

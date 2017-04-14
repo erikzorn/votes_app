@@ -8,7 +8,7 @@
 
 <div class="container" style="padding:30px">
 	<h1>Welcome!</h1>
-	<p>Enter a zipcode below to find recent bills voted on by that district's Congress Representative</p>
+	<p>Enter zipcode below to find recent bills voted on by that district's Congress Representative</p>
 	<form method='POST' action='.'>	{% csrf_token %}
 		{{ form.as_p }} <input type='submit' value='submit' />
 	</form>

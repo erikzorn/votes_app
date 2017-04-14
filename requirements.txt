@@ -8,4 +8,4 @@ pytz==2017.2
 requests==2.13.0
 six==1.10.0
 whitenoise==3.3.0
-psycopg==2.6.2
+psycopg==2.6.1

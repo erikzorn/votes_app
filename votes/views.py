@@ -28,9 +28,11 @@ def get_district_number(zipcode):
 		resp = requests.get('https://congress.api.sunlightfoundation.com/districts/locate?zip={}'.format(zipcode))
 		if resp.status_code != 200:
 			print 'Could not get district number, status code: ' + str(resp.status_code)
-			return
+			return None
 		js = resp.json()
-		#print js
+		if js['count'] is 0:
+			return -1, -1
+		#print resp.status_code
 		state_name = js['results'][0]['state']
 		district_number = js['results'][0]['district']
 		#return {'state_name':state_name, 'district_number':district_number}
@@ -38,9 +40,9 @@ def get_district_number(zipcode):
 
 def get_congressperson(state, district):
 	resp = requests.get('https://api.propublica.org/congress/v1/members/house/{}/{}/current.json'.format(state,district), headers=headers)
-	if resp.status_code != 200:
-			print 'Could not get congressperson, status code: ' + str(resp.status_code)
-			return
+	#if resp.status_code != 200:
+	#		print 'Could not get congressperson, status code: ' + str(resp.status_code)
+	#		return
 	js = resp.json()
 	return js['results'][0]['name'], js['results'][0]['id']
 
@@ -93,24 +95,28 @@ class HomeView(View):
 			'name': 'erikzorn'	
 		}
 		#print form
-		return render(request, 'vote_data.html', context)
+		return render(request, 'startpage.html', context)
 
 	def post(self, request, *args, **kwargs):
 		form = SubmitZipForm(request.POST)
 		if form.is_valid():
-			print(form.cleaned_data)
-
-		state, district = get_district_number(form.cleaned_data['zip'])
-		congressperson, ID = get_congressperson(state, district)
-		votes = get_recent_votes(ID) 
-
-		context = {
+			#print(form.cleaned_data)
+			state, district = get_district_number(form.cleaned_data['zip'])
+		if (state > -1):
+			congressperson, ID = get_congressperson(state, district)
+			votes = get_recent_votes(ID) 
+			context = {
+				'title': 'Submit Zipcode',
+				'form': form,
+				'name': 'Erik Zorn',
+				'person': congressperson,
+				'votes':votes,
+			}
+		else:
+			context = {
 			'title': 'Submit Zipcode',
 			'form': form,
-			'name': 'Erik Zorn',
-			'person': congressperson,
-			'votes':votes,
-		
+			'person': 'INVALID ZIPCODE',	
 		}
 		return render(request,'vote_data.html',context)
 

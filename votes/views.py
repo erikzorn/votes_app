@@ -17,6 +17,8 @@ headers = {
 
 #template
 
+
+
 def home_view_fbv(request, *args, **kwargs):
 	if request.method =='POST':
 		print(request.POST)

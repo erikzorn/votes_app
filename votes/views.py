@@ -46,35 +46,44 @@ def get_recent_votes(ID):
 
    	js = resp.json()
 
+   	for x in range (10):
+   		print js['results'][0]['votes'][x]
+
    	votes_title = []
-   	votes_position = []
+   	#votes_position = []
    	votes = []
    	count = 0	# keeps track of when 6 unique bills have been collected
    	i = 0		# used for iteration through query data
 
    	#add last 6 question and vote position so lists.
-   	while (count < 6):
+   	while (count < 10):
    		if bool(js['results'][0]['votes'][i]['bill']):		# if bill{} is not empty
 
    			title = js['results'][0]['votes'][i]['bill']['title']	# title of specific bill
    			position = js['results'][0]['votes'][i]['position']		# position (yes/no)
 
-   			if(title in votes_title):			# if this bill is already in the list then remove instance and corresponding position
-   				votes_position.pop(votes_title.index(title))
-   				votes_title.remove(title)
+   			# if(title in votes_title):			# if this bill is already in the list then remove instance and corresponding position
+   			# 	votes_position.pop(votes_title.index(title))
+   			# 	votes_title.remove(title)
 
-   			else:		# if bill was not a duplicate then increment counter to know that there is now one more bill in the list
+   			# else:		# if bill was not a duplicate then increment counter to know that there is now one more bill in the list
+   			# 	count = count + 1
+
+   			# #add new title and position to lists
+   			# votes_title.append(title)
+   			# votes_position.append(position)
+
+   			# only add bill if more recent vote DNE
+   			if(title not in votes_title):			
+   				votes_title.append(title)
+   				votes.append([title, position])
    				count = count + 1
-
-   			#add new title and position to lists
-   			votes_title.append(title)
-   			votes_position.append(position)
 
    		i = i + 1
 
    	# put data in tuples to return
-   	for i in range(len(votes_title)):
-		votes.append([votes_title[i], votes_position[i]])
+  #  	for i in range(len(votes_title)):
+		# votes.append([votes_title[i], votes_position[i]])
 
 	return votes #, votes_title, votes_position 
 

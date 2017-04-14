@@ -6,17 +6,9 @@ from django.views import View
 from .forms import SubmitZipForm
 import requests
 
-headers = {
+headers = {		# Propub API KEY
     	'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
     }
-
-
-# Create your views here.
-
-#from django.http import HttpResponse
-
-#template
-
 
 
 def home_view_fbv(request, *args, **kwargs):

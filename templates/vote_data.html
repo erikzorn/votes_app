@@ -1,27 +1,32 @@
+{% load staticfiles %}
 <html>
 <head>
 	<title>Erik Zorn Code Challenge</title>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{% static 'css/votes.css' %}">
 
 </head>
 <body>
 <div class="container" style="padding:15px 30px 20px 30px">
-	<h1>Welcome!</h1>
-	<p><b>Enter zipcode below to find recent bills voted on by that district's Congress Representative</b></p>
-	<form method='POST' action='.' class="form-horizontal">	{% csrf_token %}
+	
+	<div id="prompt">
+		<h1>Welcome!</h1>
+		<p><b>Enter zipcode below to find recent bills voted on by that district's Congress Representative</b></p>
+		<form method='POST' action='.' class="form-inline">	{% csrf_token %}
 
-		{{ form.as_p }}
-		<input type='submit' value='submit'/>
-	</form>
-
+			{{ form.as_p }}
+			<input type='submit' value='submit' />
+		</form>
+	</div>
+	{% for item in formdisplay %}
 	<h2> Your Congress Representative: {{person}}</h2>
 
 	<table class="table" align="center">
 
 		<tr>
-			<th>Bills Voted On</th>
-			<th>Voted</th>
+			<th align="center">Bills Voted On</th>
+			<th align="center">Votes</th>
 		</tr>
 
 		{% for item in votes %}
@@ -32,6 +37,9 @@
 		{% endfor %}
 
 	</table>
+	{% endfor %}
+		
+
 </div>
 </body>
 </html>

@@ -98,7 +98,7 @@ class HomeView(View):
 			'name': 'erikzorn'	
 		}
 		#print form
-		return render(request, 'startpage.html', context)
+		return render(request, 'vote_data.html', context)
 
 	def post(self, request, *args, **kwargs):
 		form = SubmitZipForm(request.POST)
@@ -114,6 +114,7 @@ class HomeView(View):
 				'name': 'Erik Zorn',
 				'person': congressperson,
 				'votes':votes,
+				'formdisplay': '1',
 			}
 		else:
 			context = {

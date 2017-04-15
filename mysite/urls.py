@@ -19,9 +19,7 @@ from django.contrib import admin
 from votes.views import HomeView #,startpage
 
 urlpatterns = [
-	#url(r'^$', startpage),
 	
     url(r'^admin/', admin.site.urls),
-    url(r'^$', HomeView.as_view()),
     url(r'', include('votes.urls')),
 ]

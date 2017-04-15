@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
 from . import views
+from votes.views import HomeView 
 
 urlpatterns = [
-    #url(r'^$', views.index, name='index'),
-    #url(r'^$', views.startpage, name='startpage'),
+	url(r'^$', HomeView.as_view()),
 ]

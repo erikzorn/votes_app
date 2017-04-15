@@ -13,15 +13,17 @@
 	<div id="prompt">
 		<h1>Welcome!</h1>
 		<p><b>Enter zipcode below to find recent bills voted on by that district's Congress Representative</b></p>
+		
 		<form method='POST' action='.' class="form-inline">	{% csrf_token %}
-
 			{{ form.as_p }}
 			<input type='submit' value='submit' />
 		</form>
+		
 	</div>
-	{% for item in formdisplay %}
+	
+	<h2>{{invalid}}</h2>
+	{% for item in formdisplay %}		<!-- outer loop only runs if info is returned -->
 	<h2> Your Congress Representative: {{person}}</h2>
-
 	<table class="table" align="center">
 
 		<tr>
@@ -29,7 +31,7 @@
 			<th align="center">Votes</th>
 		</tr>
 
-		{% for item in votes %}
+		{% for item in votes %}		<!-- loops through lists to create table of bills -->
 			<tr>
 				<td>{{ item.0 }}</td>
 				<td>{{ item.1 }}</td>

@@ -2,8 +2,6 @@ from django import forms
 
 #from django.core.validators import
 
-#def validate_zip(value):
-#	zip_validator = 
 
 class SubmitZipForm(forms.Form):
 	zip = forms.IntegerField(label="", widget=forms.NumberInput({ "placeholder": "enter zipcode here" }))

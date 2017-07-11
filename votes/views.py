@@ -24,7 +24,8 @@ class HomeView(View):
 		form = SubmitZipForm(request.POST)
 
 		if form.is_valid():	
-			state, district = propub.get_district_number(form.cleaned_data['zip'])
+			state, district = propub.get_district_number_from_txt(form.cleaned_data['zip'])
+			# state, district = propub.get_district_number(form.cleaned_data['zip'])
 
 		if (state > -1):	# if valid input and results
 			congressperson, ID = propub.get_congressperson(state, district)

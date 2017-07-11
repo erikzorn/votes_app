@@ -1,8 +1,35 @@
 import requests
+#import natl_zccd_delim
 
 headers = {		# Propub API KEY
-    	'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
+    	# 'X-API-Key': 'HeU67wOwjMas9zx1MWRRg4fB09F4YyJ87jgec6xv',
+      'X-API-Key': 'xd5FaUXUeC2YyBp1yb4CQ6jhAKW6ho5X731HrpUV',
     }
+def get_district_number_from_txt(zipcode):
+    file = open('votes/natl_zccd_delim.txt', 'r')
+    state_name = ""
+    zipFound = False
+    for line in file:
+      if str(zipcode) in line:
+        district_number = line.split(',')[2].strip()
+        state_number = line.split(',')[0].strip()
+        zipFound = True
+    if not zipFound:
+        return -1, -1
+    file.close()
+
+    file = open('votes/state_numbers.txt', 'r')
+    for line in file:
+      print("IF " + line.split(',')[1] + " == " + str(state_number))
+      if line.split(',')[1] == str(state_number):
+        state_name = line.split(',')[2].strip()
+    file.close()
+
+    return state_name, district_number
+
+'''
+Sunlight API id deprecated 
+No longer uused for obtaining district number
 
 def get_district_number(zipcode):
 		resp = requests.get('https://congress.api.sunlightfoundation.com/districts/locate?zip={}'.format(zipcode))
@@ -18,7 +45,7 @@ def get_district_number(zipcode):
 		district_number = js['results'][0]['district']
 
 		return state_name, district_number
-
+'''
 def get_congressperson(state, district):
 	resp = requests.get('https://api.propublica.org/congress/v1/members/house/{}/{}/current.json'.format(state,district), headers=headers)
 	#if resp.status_code != 200:

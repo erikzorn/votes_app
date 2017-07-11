@@ -1,1 +1,1 @@
-Visit project at <a href='http://erikzorncodingchallenge.herokuapp.com'>Heroku Link</a>
+Visit project at <a href='erikzornprogrammingchallenge.herokuapp.com' target='blank'>Heroku Link</a>

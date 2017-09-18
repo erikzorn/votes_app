@@ -22,6 +22,7 @@ def get_district_number_from_txt(zipcode):
     for line in file:
       print("IF " + line.split(',')[1] + " == " + str(state_number))
       if line.split(',')[1] == str(state_number):
+        print("YUPP")
         state_name = line.split(',')[2].strip()
     file.close()
 
@@ -55,30 +56,35 @@ def get_congressperson(state, district):
 	return js['results'][0]['name'], js['results'][0]['id']
 
 def get_recent_votes(ID):
+    import json
+    resp = requests.get('https://api.propublica.org/congress/v1/members/{}/votes.json'.format(ID), headers=headers)
 
-   	resp = requests.get('https://api.propublica.org/congress/v1/members/{}/votes.json'.format(ID), headers=headers)
+    js = resp.json()
+    print(json.dumps(js, indent=2))
 
-   	js = resp.json()
+    votes_title = []	# list keeps track of bills already voted on
+    votes = []
+    count = 0	# keeps track of when 6 unique bills have been collected
+    i = 0		# used for iteration through query data
+    #add last 6 question and vote position so lists
+    while (count < 10):
+      try:
+        if bool(js['results'][0]['votes'][i]['bill']):		# if bill{} is not empty
+          print("!")
+          title = js['results'][0]['votes'][i]['bill']['title']	# title of specific bill
+          print("2")
+          description = js['results'][0]['votes'][i]['description']
+          position = js['results'][0]['votes'][i]['position']		# position (yes/no)
+          print(title)
+          print(position)
+          #if(title not in votes_title):			# if this bill does not already have a responds then add it to the list 
+          votes_title.append(title)
+          votes.append([title, description, position])		# add the title and postion to a list of tuples
+          count = count + 1					# increment the count of bills to be returned
+      except:
+        print("ERROR")
+        count = count + 1
+      i = i + 1			# increment index for getting API data
 
-   	votes_title = []	# list keeps track of bills already voted on
-
-   	votes = []
-   	count = 0	# keeps track of when 6 unique bills have been collected
-   	i = 0		# used for iteration through query data
-
-   	#add last 6 question and vote position so lists.
-   	while (count < 10):
-   		if bool(js['results'][0]['votes'][i]['bill']):		# if bill{} is not empty
-
-   			title = js['results'][0]['votes'][i]['bill']['title']	# title of specific bill
-   			position = js['results'][0]['votes'][i]['position']		# position (yes/no)
-
-   			if(title not in votes_title):			# if this bill does not already have a responds then add it to the list 
-   				votes_title.append(title)
-   				votes.append([title, position])		# add the title and postion to a list of tuples
-   				count = count + 1					# increment the count of bills to be returned
-
-   		i = i + 1			# increment index for getting API data
-
-	return votes #, votes_title, votes_position 
+    return votes #, votes_title, votes_position 
 
